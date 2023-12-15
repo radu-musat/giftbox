@@ -1,50 +1,51 @@
 console.log('DOM fully loaded and parsed');
 const present = document.querySelector('.present');
-let items = {};
+// let advice = {};
 let playing = false;
 
-const urlSearchParams = new URLSearchParams(window.location.search);
-const params = Object.fromEntries(urlSearchParams.entries());
-let userName = document.querySelector('.username');
+// const urlSearchParams = new URLSearchParams(window.location.search);
+// const params = Object.fromEntries(urlSearchParams.entries());
+// let userName = document.querySelector('.username');
 let cardTextContainer = document.querySelector('.card-text');
 let codeContainer = document.querySelector('.code');
 let button = document.querySelector('.stop');
-let lightRope = document.querySelector('.lightrope');
+// let lightRope = document.querySelector('.lightrope');
 let song;
-getList();
 
 
-let openPresent = (event) => {
+
+let openPresent = async (event) => {
 	event.stopPropagation();
-	let user;
+	// let user;
 
-	if(params.user) {
-		console.log(window.items)
-		button.classList.add('active');
-		lightRope.classList.add('active');
+	// if(params.user) {
+	// 	console.log(window.items)
+	// 	button.classList.add('active');
+	// 	lightRope.classList.add('active');
+	//
+	// 	for(let item in window.items) {
+	// 		let itemKey = item;
+	// 		let itemValue = window.items[item];
+	//
+	// 		if(item.toLowerCase() === params.user.toLowerCase()) {
+	// 			cardTextContainer.textContent = itemValue.text;
+	// 			userName.textContent = itemKey;
+	// 			if(itemValue.mode === 'link') {
+	// 				codeContainer.innerHTML = `<a href="${itemValue.link}" target="_blank">Click to redeem your gift!</a>`;
+	// 				codeContainer.addEventListener('click',  (e) =>{
+	// 					console.log('click')
+	// 					e.stopPropagation();
+	// 				});
+	// 			}
+	// 		}
+	// 	}
+	// }
 
-		for(let item in window.items) {
-			let itemKey = item;
-			let itemValue = window.items[item];
-
-			if(item.toLowerCase() === params.user.toLowerCase()) {
-				cardTextContainer.textContent = itemValue.text;
-				userName.textContent = itemKey;
-				if(itemValue.mode === 'link') {
-					codeContainer.innerHTML = `<a href="${itemValue.link}" target="_blank">Click to redeem your gift!</a>`;
-					codeContainer.addEventListener('click',  (e) =>{
-						console.log('click')
-						e.stopPropagation();
-					});
-				}
-			}
-		}
-	}
-
-
+   await getAdvice();
+   button.style.opacity = '1';
 	if(!playing) {
 		playing = true;
-		song = new Audio('https://bizziroute.com/downloads/glee/jingle-bell-rock.mp3');
+		song = new Audio('./santa-song.mp3');
 		song.play();
 	}
 	present.classList.add('open');
@@ -60,10 +61,12 @@ let stopMusic = (event)=> {
 present.onclick = openPresent;
 button.onclick = stopMusic;
 
-async function getList() {
-	let response =  await fetch("https://giftbox-70986-default-rtdb.firebaseio.com/.json");
+async function getAdvice() {
+	let response =  await fetch("https://api.adviceslip.com/advice");
 	let result = await response.json();
-	window.items = result;
+	// window.advice = result;
+	console.log(result);
+	codeContainer.textContent = result.slip.advice;
 }
 
 (function () {
