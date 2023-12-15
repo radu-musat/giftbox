@@ -42,7 +42,7 @@ let openPresent = async (event) => {
 	// }
 
    await getAdvice();
-   button.style.opacity = '1';
+   button.classList.add('active');
 	if(!playing) {
 		playing = true;
 		song = new Audio('./santa-song.mp3');
